@@ -2,63 +2,110 @@
 <html>
 <head>
     <title>MilarfME Maker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body {
-            background: linear-gradient(135deg, #ffd1f9, #b3fcff, #fff9bb);
-            font-family: 'Comic Sans MS', cursive, sans-serif; /* Cute font */
-            text-align: center;
-            margin: 0; /* Remove body margin */
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        @keyframes colorChange {
+            0% {
+                background-color: #FFC0CB; /* pink */
+            }
+            33% {
+                background-color: #B0E0E6; /* powder blue */
+            }
+            66% {
+                background-color: #F5DEB3; /* wheat */
+            }
+            100% {
+                background-color: #FFC0CB; /* pink */
+            }
         }
 
-        /* Add more animations here for buttons */
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: colorChange 10s linear infinite;
+            overflow: auto;
+        }
+
+        /* Create bubble animations */
+        body::after {
+            content: "";
+            background: url('https://www.transparenttextures.com/patterns/psychedelic-pattern.png');
+            opacity: 0.5;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            z-index: -1;   
+        }
+
+        .header-image {
+            width: 80%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
         .button {
             display: inline-block;
-            padding: 12px 20px;
-            margin: 10px;
-            background-color: #e2589e; /* Darker and colorful button background */
-            color: #fff;
+            padding: 8px 16px;
+            margin: 5px;
+            background-color: #D1C4E9;
+            color: #3F3D56;
             border-radius: 30px;
             text-decoration: none;
-            transition: background-color 0.3s ease-in-out, transform 0.2s;
+            transition: background-color 0.3s ease-in-out;
             cursor: pointer;
         }
 
         .button:hover {
-            background-color: #d63383; /* Darker and colorful hover effect */
-            transform: scale(1.1);
+            background-color: #B39DDB;
         }
 
         .decoration {
-            /* Add more animations here for decorations */
             position: absolute;
-            opacity: 1; /* Fix opacity */
-            pointer-events: auto; /* Fix pointer events */
+            opacity: 1;
+            pointer-events: auto;
             transition: transform 0.3s ease-in-out, opacity 0.5s;
         }
 
-        /* Add more animations here for the upload button */
         .upload-label {
             display: inline-block;
-            padding: 12px 20px;
-            background-color: #6bf;
-            color: #fff;
+            padding: 8px 16px;
+            background-color: #B39DDB;
+            color: #3F3D56;
             border-radius: 30px;
             cursor: pointer;
-            transition: background-color 0.3s ease-in-out, transform 0.2s;
+            transition: background-color 0.3s ease-in-out;
         }
 
         .upload-label:hover {
-            background-color: #0c98e6;
-            transform: scale(1.05);
+            background-color: #9575CD;
         }
 
-        /* Add more animations here for the resize slider */
-        #resize-slider {
-            width: 200px;
+        #resize-slider, #x-slider, #y-slider {
+            width: 80%;
             margin: 10px auto;
+            background: #B39DDB;
+            outline: none;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
         }
 
-        /* Add more animations here for the X and Y sliders */
+        #resize-slider:hover, #x-slider:hover, #y-slider:hover {
+            background: #9575CD;
+        }
+
         .slider-container {
             display: flex;
             align-items: center;
@@ -70,28 +117,48 @@
             margin: 0 10px;
         }
 
-        /* Fit the canvas within the window */
         #canvas {
-            max-width: 600px; /* Maximum width for the editor */
-            max-height: 600px; /* Maximum height for the editor */
-            overflow: hidden; /* Hide any decorations that extend beyond the editor */
+            width: 100%;
+            max-width: 600px;
+            overflow: hidden;
             position: relative;
-            margin: 10px auto; /* Center the editor */
+            margin: 10px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Additional styles for the download button */
+        #canvas-inner {
+            width: 100%;
+            overflow-y: auto;
+        }
+
         #download-image {
             margin-top: 10px;
+        }
+
+        @media screen and (max-width: 600px) {
+            .decoration {
+                display: none;
+            }
+
+            #uploaded-image {
+                max-width: 100%;
+                height: auto;
+            }
+
+            #resize-slider, #x-slider, #y-slider {
+                width: 80%;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>MilarfME Maker</h1>
-
-    <div style="position: relative;">
+    <img class="header-image" src="https://i.imgur.com/NM531VJ.png" alt="Header Image">
+    <div style="position: relative; min-height: 80vh;">
         <div id="canvas">
             <div id="canvas-inner">
-                <img id="uploaded-image" src="" alt="Uploaded Image">
+                <img id="uploaded-image" src="" alt="Uploaded Image" style="width: 100%;">
                 <div id="decorations-container"></div>
             </div>
         </div>
@@ -99,13 +166,16 @@
             <div class="button" data-url="https://i.imgur.com/LXvNxkt.png">Beers</div>
             <div class="button" data-url="https://i.imgur.com/HYlGsfO.png">Ciggy</div>
             <div class="button" data-url="https://i.imgur.com/DWzLF6b.png">Dem Eyes</div>
-            <!-- Add more decoration options -->
+            <div class="button" data-url="https://i.imgur.com/Wajtyfr.png">Milarf Frame</div>
         </div>
         <label for="upload-input" class="upload-label">
             <input type="file" id="upload-input" accept="image/*">
             Upload Mid Image
         </label>
-        <input type="range" min="50" max="800" value="200" step="10" id="resize-slider" oninput="resizeDecoration()">
+        <div class="slider-container">
+            <span class="slider-label">Size: big or smol</span>
+            <input type="range" min="50" max="800" value="200" step="10" id="resize-slider" oninput="resizeDecoration()">
+        </div>
         <div class="slider-container">
             <span class="slider-label">X:</span>
             <input type="range" min="0" max="100" value="50" step="1" id="x-slider" oninput="moveDecoration()">
@@ -114,6 +184,12 @@
             <span class="slider-label">Y:</span>
             <input type="range" min="0" max="100" value="50" step="1" id="y-slider" oninput="moveDecoration()">
         </div>
+        <div class="slider-container">
+            <span class="slider-label">Rotate:</span>
+            <button class="button" id="rotate-left-button" onclick="rotateLeft()">Left</button>
+            <button class="button" id="rotate-right-button" onclick="rotateRight()">Right</button>
+        </div>
+        <button class="button" id="flip-button" onclick="flipDecoration()">Flip Horizontally</button>
         <button class="button" id="download-image" onclick="downloadWithDecorations()">Download Banger</button>
     </div>
 
@@ -121,36 +197,46 @@
     <script>
         let decorations = [];
         let selectedDecoration = null;
+        let rotateValue = 0;
 
         function addDecoration(decorationUrl) {
             const newDecoration = document.createElement('img');
             newDecoration.src = decorationUrl;
             newDecoration.classList.add('decoration');
-            newDecoration.style.width = '100px'; // Set a reasonable initial size
-            newDecoration.style.height = '100px';
-            newDecoration.style.top = '50%';
+            newDecoration.style.width = '200px';
+            newDecoration.style.height = '200px';
+            newDecoration.style.position = 'absolute';
             newDecoration.style.left = '50%';
-            newDecoration.style.transform = 'translate(-50%, -50%)';
+            newDecoration.style.top = '50%';
+            newDecoration.style.transform = 'translate(-50%, -50%) rotate(0deg)';
             newDecoration.addEventListener('mousedown', handleDecorationMouseDown);
             document.getElementById('decorations-container').appendChild(newDecoration);
             decorations.push(newDecoration);
-            selectedDecoration = newDecoration; // Set the last moved decoration to the new one
-        }
-
-        function deleteDecoration(decoration) {
-            decoration.remove();
-            const index = decorations.indexOf(decoration);
-            if (index !== -1) {
-                decorations.splice(index, 1);
-            }
+            selectDecoration(newDecoration);
         }
 
         function handleDecorationMouseDown(event) {
-            selectedDecoration = event.target;
-            const rect = selectedDecoration.getBoundingClientRect();
-            const offsetX = event.clientX - rect.left;
-            const offsetY = event.clientY - rect.top;
-            selectedDecoration.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px)`;
+            event.preventDefault();
+            selectDecoration(event.target);
+        }
+
+        function selectDecoration(decoration) {
+            selectedDecoration = decoration;
+            updateSliders();
+        }
+
+        function updateSliders() {
+            const size = parseInt(selectedDecoration.style.width);
+            document.getElementById('resize-slider').value = size;
+
+            const xPercentage = parseInt(selectedDecoration.style.left);
+            document.getElementById('x-slider').value = xPercentage;
+
+            const yPercentage = parseInt(selectedDecoration.style.top);
+            document.getElementById('y-slider').value = yPercentage;
+
+            const flip = selectedDecoration.style.transform.includes('scaleX(-1)');
+            document.getElementById('flip-button').textContent = flip ? 'Unflip Horizontally' : 'Flip Horizontally';
         }
 
         function resizeDecoration() {
@@ -170,40 +256,53 @@
             }
         }
 
+        function rotateLeft() {
+            if (selectedDecoration) {
+                rotateValue = (rotateValue - 5) % 360;
+                updateRotate();
+            }
+        }
+
+        function rotateRight() {
+            if (selectedDecoration) {
+                rotateValue = (rotateValue + 5) % 360;
+                updateRotate();
+            }
+        }
+
+        function updateRotate() {
+            const existingTransform = selectedDecoration.style.transform.replace(/rotate\(.*?\)/, '');
+            const newTransform = existingTransform + ` rotate(${rotateValue}deg)`;
+            selectedDecoration.style.transform = newTransform;
+        }
+
+        function flipDecoration() {
+            if (selectedDecoration) {
+                const flipValue = selectedDecoration.style.transform.includes('scaleX(-1)') ? '' : 'scaleX(-1)';
+                const existingTransform = selectedDecoration.style.transform.replace(/scaleX\(-1\)/, '');
+                const newTransform = existingTransform + ` ${flipValue}`;
+                selectedDecoration.style.transform = newTransform;
+                updateSliders();
+            }
+        }
+
         function handleImageUpload(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const img = new Image();
-                    img.src = e.target.result;
-                    img.onload = function() {
-                        resizeImageToFitWindow(img); // Resize the image to fit within the window
-                        document.getElementById('uploaded-image').src = img.src;
-                        decorations.forEach(decoration => deleteDecoration(decoration));
-                    };
+                    document.getElementById('uploaded-image').src = e.target.result;
+                    decorations.forEach(decoration => deleteDecoration(decoration));
                 };
                 reader.readAsDataURL(file);
             }
         }
 
-        function resizeImageToFitWindow(image) {
-            const maxWidth = 600; // Maximum width for the editor
-            const maxHeight = 600; // Maximum height for the editor
-            const scaleFactor = Math.min(maxWidth / image.naturalWidth, maxHeight / image.naturalHeight, 1); // Scale factor to fit within the window
-            const displayWidth = image.naturalWidth * scaleFactor;
-            const displayHeight = image.naturalHeight * scaleFactor;
-            document.getElementById('canvas-inner').style.width = displayWidth + 'px';
-            document.getElementById('canvas-inner').style.height = displayHeight + 'px';
-
-            // Set the image size to match the displayed size
-            document.getElementById('uploaded-image').style.width = displayWidth + 'px';
-            document.getElementById('uploaded-image').style.height = displayHeight + 'px';
-        }
-
         async function downloadImage() {
             const canvas = await html2canvas(document.getElementById('canvas-inner'), {
-                useCORS: true // Enable CORS for images to handle external URLs
+                useCORS: true,
+                y: 0,
+                height: document.getElementById('uploaded-image').clientHeight
             });
             const dataUrl = canvas.toDataURL('image/png');
             const link = document.createElement('a');
@@ -212,17 +311,15 @@
             link.click();
         }
 
-        // New function with a delay before calling downloadImage
         function downloadWithDecorations() {
             setTimeout(() => {
                 downloadImage();
-            }, 100); // Adjust the delay as needed
+            }, 100);
         }
 
         document.getElementById('upload-input').addEventListener('change', handleImageUpload);
         document.getElementById('download-image').addEventListener('click', downloadWithDecorations);
 
-        // Prevent default behavior of anchor tags in decoration buttons
         const decorationButtons = document.querySelectorAll('#decoration-buttons .button');
         decorationButtons.forEach(button => button.addEventListener('click', function(event) {
             event.preventDefault();
