@@ -22,7 +22,7 @@
         }
 
         body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-family: 'Comic Sans MS';
             text-align: center;
             margin: 0;
             padding: 0;
@@ -138,10 +138,6 @@
         }
 
         @media screen and (max-width: 600px) {
-            .decoration {
-                display: none;
-            }
-
             #uploaded-image {
                 max-width: 100%;
                 height: auto;
@@ -258,14 +254,14 @@
 
         function rotateLeft() {
             if (selectedDecoration) {
-                rotateValue = (rotateValue - 5) % 360;
+                rotateValue = (rotateValue - 1) % 360;
                 updateRotate();
             }
         }
 
         function rotateRight() {
             if (selectedDecoration) {
-                rotateValue = (rotateValue + 5) % 360;
+                rotateValue = (rotateValue + 1) % 360;
                 updateRotate();
             }
         }
@@ -292,7 +288,8 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('uploaded-image').src = e.target.result;
-                    decorations.forEach(decoration => deleteDecoration(decoration));
+                    decorations.forEach(decoration => decoration.remove());
+                    decorations = [];
                 };
                 reader.readAsDataURL(file);
             }
