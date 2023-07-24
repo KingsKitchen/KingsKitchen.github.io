@@ -62,20 +62,12 @@
             background-color: #B39DDB;
         }
 
-        .do-not-click-button {
-            display: inline-block;
-            padding: 8px 16px;
-            margin: 5px;
-            background-color: #0000FF;
-            color: #FFFFFF;
-            border-radius: 30px;
-            text-decoration: none;
-            transition: background-color 0.3s ease-in-out;
-            cursor: pointer;
+        .do-not-click {
+            background-color: #1DA1F2;
         }
 
-        .do-not-click-button:hover {
-            background-color: #0000CD;
+        .do-not-click:hover {
+            background-color: #0b80c3;
         }
 
         .decoration {
@@ -117,7 +109,7 @@
             background-color: #9575CD;
         }
 
-        #resize-slider, #x-slider, #y-slider, #wrap-slider {
+        #resize-slider, #x-slider, #y-slider {
             width: 80%;
             margin: 10px auto;
             background: #B39DDB;
@@ -128,7 +120,7 @@
             transition: background-color 0.3s ease-in-out;
         }
 
-        #resize-slider:hover, #x-slider:hover, #y-slider:hover, #wrap-slider:hover {
+        #resize-slider:hover, #x-slider:hover, #y-slider:hover {
             background: #9575CD;
         }
 
@@ -212,14 +204,10 @@
             <button class="button" id="rotate-left">Left</button>
             <button class="button" id="rotate-right">Right</button>
         </div>
-        <div class="slider-container">
-            <span class="slider-label">Wrap Text:</span>
-            <input type="range" min="10" max="100" value="100" step="1" id="wrap-slider">
-        </div>
         <button class="button" id="flip-button">Flip Horizontally</button>
-        <button class="button" id="delete-last">Delete Last Decoration</button>
+        <button class="button" id="delete-last">Delete Last</button>
         <button class="button" id="download-image">Download Banger</button>
-        <a href="https://twitter.com/kingarfeth" target="_blank" class="do-not-click-button">Do Not Click</a>
+        <a href="https://twitter.com/kingarfeth" target="_blank" class="button do-not-click">Do Not Click</a>
     </div>
 
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
@@ -253,7 +241,6 @@
                 newDecoration.textContent = textContent;
                 newDecoration.classList.add('text-decoration');
                 newDecoration.style.fontSize = '50px';
-                newDecoration.style.width = '100%';
             } else {
                 newDecoration = document.createElement('img');
                 newDecoration.src = decorationUrl;
@@ -283,8 +270,9 @@
         }
 
         function deleteLastDecoration() {
-            if (decorations.length) {
-                deleteDecoration(decorations[decorations.length - 1]);
+            if (decorations.length > 0) {
+                const lastDecoration = decorations[decorations.length - 1];
+                deleteDecoration(lastDecoration);
             }
         }
 
@@ -299,6 +287,8 @@
         }
 
         function updateSliders() {
+            if (!selectedDecoration) return;
+
             const size = selectedDecoration.classList.contains('text-decoration') ? parseInt(window.getComputedStyle(selectedDecoration).fontSize) : parseInt(selectedDecoration.style.width);
             document.getElementById('resize-slider').value = size;
 
@@ -310,9 +300,6 @@
 
             const flip = selectedDecoration.style.transform.includes('scaleX(-1)');
             document.getElementById('flip-button').textContent = flip ? 'Unflip Horizontally' : 'Flip Horizontally';
-
-            const wrap = selectedDecoration.classList.contains('text-decoration') ? parseInt(window.getComputedStyle(selectedDecoration).width) : 100;
-            document.getElementById('wrap-slider').value = wrap;
         }
 
         function resizeDecoration() {
@@ -352,6 +339,8 @@
         }
 
         function updateRotate() {
+            if (!selectedDecoration) return;
+
             const existingTransform = selectedDecoration.style.transform.replace(/rotate\(.*?\)/, '');
             const newTransform = existingTransform + ` rotate(${rotateValue}deg)`;
             selectedDecoration.style.transform = newTransform;
@@ -374,7 +363,6 @@
                 reader.onload = function(e) {
                     document.getElementById('uploaded-image').src = e.target.result;
                     decorations.forEach(decoration => deleteDecoration(decoration));
-                    document.getElementById('wrap-slider').max = document.getElementById('uploaded-image').clientWidth;
                 };
                 reader.readAsDataURL(file);
             }
@@ -411,6 +399,7 @@
 
         document.getElementById('upload-input').addEventListener('change', handleImageUpload);
         document.getElementById('download-image').addEventListener('click', downloadWithDecorations);
+        document.getElementById('delete-last').addEventListener('click', deleteLastDecoration);
 
         const decorationButtons = document.querySelectorAll('#decoration-buttons .button');
         decorationButtons.forEach(button => button.addEventListener('mousedown', function(event) {
@@ -435,7 +424,6 @@
         document.getElementById('rotate-left').addEventListener('click', rotateLeft);
         document.getElementById('rotate-right').addEventListener('click', rotateRight);
         document.getElementById('flip-button').addEventListener('click', flipDecoration);
-        document.getElementById('delete-last').addEventListener('click', deleteLastDecoration);
     </script>
 </body>
 </html>
