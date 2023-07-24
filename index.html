@@ -7,7 +7,6 @@
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Impact&display=swap');
 
-        /* Create animation for background color change */
         @keyframes backgroundChange {
             0% {background-color: #D1C4E9;}
             50% {background-color: #B39DDB;}
@@ -26,7 +25,6 @@
             justify-content: center;
             background: #F8F0FB;
             overflow: auto;
-            /* Add animation for background color change */
             animation: backgroundChange 5s infinite;
         }
 
@@ -240,7 +238,6 @@
             newDecoration.style.top = '50%';
             newDecoration.style.transform = 'translate(-50%, -50%) rotate(0deg)';
             newDecoration.addEventListener('mousedown', handleDecorationMouseDown);
-            newDecoration.addEventListener('touchstart', handleDecorationMouseDown);
             document.getElementById('decorations-container').appendChild(newDecoration);
             decorations.push(newDecoration);
             selectDecoration(newDecoration);
@@ -349,14 +346,9 @@
         async function downloadImage() {
             const canvas = await html2canvas(document.getElementById('canvas-inner'), {
                 useCORS: true,
-                x: 0,
-                y: 0,
                 scrollY: -window.scrollY,
-                scrollX: -window.scrollX,
-                windowWidth: document.documentElement.offsetWidth,
-                windowHeight: document.documentElement.offsetHeight,
-                width: document.getElementById('uploaded-image').naturalWidth,
-                height: document.getElementById('uploaded-image').naturalHeight
+                windowWidth: document.body.scrollWidth,
+                windowHeight: document.body.scrollHeight,
             });
             const dataUrl = canvas.toDataURL('image/png');
             const link = document.createElement('a');
@@ -375,7 +367,7 @@
         document.getElementById('download-image').addEventListener('click', downloadWithDecorations);
 
         const decorationButtons = document.querySelectorAll('#decoration-buttons .button');
-        decorationButtons.forEach(button => button.addEventListener('click', function(event) {
+        decorationButtons.forEach(button => button.addEventListener('touchend', function(event) {
             event.preventDefault();
             addDecoration(button.dataset.url);
         }));
