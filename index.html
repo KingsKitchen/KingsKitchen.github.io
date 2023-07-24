@@ -63,11 +63,19 @@
         }
 
         .do-not-click {
-            background-color: #1DA1F2;
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 5px;
+            background-color: #ADD8E6;
+            color: #3F3D56;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: background-color 0.3s ease-in-out;
+            cursor: pointer;
         }
 
         .do-not-click:hover {
-            background-color: #0b80c3;
+            background-color: #87CEEB;
         }
 
         .decoration {
@@ -88,8 +96,6 @@
             text-align: center;
             line-height: 1.2;
             position: absolute;
-            max-width: calc(100% - 20px);
-            word-wrap: break-word;
             font-size: 50px;
             -webkit-text-stroke: 2px black;
             padding: 10px;
@@ -180,6 +186,7 @@
             <div class="button" data-url="https://i.imgur.com/HYlGsfO.png">Ciggy</div>
             <div class="button" data-url="https://i.imgur.com/DWzLF6b.png">Dem Eyes</div>
             <div class="button" data-url="https://i.imgur.com/Wajtyfr.png">Milarf Frame</div>
+            <a class="button do-not-click" href="https://twitter.com/kingarfeth" target="_blank">Do Not Click</a>
         </div>
         <label for="upload-input" class="upload-label">
             <input type="file" id="upload-input" accept="image/*">
@@ -205,9 +212,8 @@
             <button class="button" id="rotate-right">Right</button>
         </div>
         <button class="button" id="flip-button">Flip Horizontally</button>
-        <button class="button" id="delete-last">Delete Last</button>
+        <button class="button" id="delete-decoration">Delete Last Decoration</button>
         <button class="button" id="download-image">Download Banger</button>
-        <a href="https://twitter.com/kingarfeth" target="_blank" class="button do-not-click">Do Not Click</a>
     </div>
 
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
@@ -261,18 +267,10 @@
             selectDecoration(newDecoration);
         }
 
-        function deleteDecoration(decoration) {
-            decoration.remove();
-            const index = decorations.indexOf(decoration);
-            if (index !== -1) {
-                decorations.splice(index, 1);
-            }
-        }
-
         function deleteLastDecoration() {
             if (decorations.length > 0) {
-                const lastDecoration = decorations[decorations.length - 1];
-                deleteDecoration(lastDecoration);
+                let lastDecoration = decorations.pop();
+                lastDecoration.remove();
             }
         }
 
@@ -287,19 +285,19 @@
         }
 
         function updateSliders() {
-            if (!selectedDecoration) return;
+            if (selectedDecoration) {
+                const size = selectedDecoration.classList.contains('text-decoration') ? parseInt(window.getComputedStyle(selectedDecoration).fontSize) : parseInt(selectedDecoration.style.width);
+                document.getElementById('resize-slider').value = size;
 
-            const size = selectedDecoration.classList.contains('text-decoration') ? parseInt(window.getComputedStyle(selectedDecoration).fontSize) : parseInt(selectedDecoration.style.width);
-            document.getElementById('resize-slider').value = size;
+                const xPercentage = parseInt(selectedDecoration.style.left);
+                document.getElementById('x-slider').value = xPercentage;
 
-            const xPercentage = parseInt(selectedDecoration.style.left);
-            document.getElementById('x-slider').value = xPercentage;
+                const yPercentage = parseInt(selectedDecoration.style.top);
+                document.getElementById('y-slider').value = yPercentage;
 
-            const yPercentage = parseInt(selectedDecoration.style.top);
-            document.getElementById('y-slider').value = yPercentage;
-
-            const flip = selectedDecoration.style.transform.includes('scaleX(-1)');
-            document.getElementById('flip-button').textContent = flip ? 'Unflip Horizontally' : 'Flip Horizontally';
+                const flip = selectedDecoration.style.transform.includes('scaleX(-1)');
+                document.getElementById('flip-button').textContent = flip ? 'Unflip Horizontally' : 'Flip Horizontally';
+            }
         }
 
         function resizeDecoration() {
@@ -339,11 +337,11 @@
         }
 
         function updateRotate() {
-            if (!selectedDecoration) return;
-
-            const existingTransform = selectedDecoration.style.transform.replace(/rotate\(.*?\)/, '');
-            const newTransform = existingTransform + ` rotate(${rotateValue}deg)`;
-            selectedDecoration.style.transform = newTransform;
+            if (selectedDecoration) {
+                const existingTransform = selectedDecoration.style.transform.replace(/rotate\(.*?\)/, '');
+                const newTransform = existingTransform + ` rotate(${rotateValue}deg)`;
+                selectedDecoration.style.transform = newTransform;
+            }
         }
 
         function flipDecoration() {
@@ -368,55 +366,22 @@
             }
         }
 
-        async function downloadImage() {
-            // Temporarily change background color to transparent
-            document.body.style.backgroundColor = 'transparent';
-            document.getElementById('canvas-inner').style.backgroundColor = 'transparent';
-
-            const canvas = await html2canvas(document.querySelector('.canvas-wrapper'), {
-                useCORS: true,
-                scrollY: -window.scrollY,
-                windowWidth: document.querySelector('.canvas-wrapper').scrollWidth,
-                windowHeight: document.querySelector('.canvas-wrapper').scrollHeight,
-                backgroundColor: null // Ensure the background is transparent
-            });
-            const dataUrl = canvas.toDataURL('image/png');
-            const link = document.createElement('a');
-            link.download = 'decorated_image.png';
-            link.href = dataUrl;
-            link.click();
-
-            // Revert background color
-            document.body.style.backgroundColor = '';
-            document.getElementById('canvas-inner').style.backgroundColor = '';
-        }
-
-        function downloadWithDecorations() {
-            setTimeout(() => {
-                downloadImage();
-            }, 100);
-        }
-
-        document.getElementById('upload-input').addEventListener('change', handleImageUpload);
-        document.getElementById('download-image').addEventListener('click', downloadWithDecorations);
-        document.getElementById('delete-last').addEventListener('click', deleteLastDecoration);
-
-        const decorationButtons = document.querySelectorAll('#decoration-buttons .button');
-        decorationButtons.forEach(button => button.addEventListener('mousedown', function(event) {
-            event.preventDefault();
-            addDecoration(button.dataset.url);
-        }));
-        decorationButtons.forEach(button => button.addEventListener('touchend', function(event) {
-            event.preventDefault();
-            addDecoration(button.dataset.url);
-        }));
-
-        document.getElementById('add-text-button').addEventListener('click', function() {
+        function handleTextAdd() {
             const textContent = document.getElementById('meme-text-input').value;
-            if (textContent) {
-                addDecoration(null, true, textContent);
+            if (textContent.trim().length > 0) {
+                addDecoration('', true, textContent);
+                document.getElementById('meme-text-input').value = '';
             }
-        });
+        }
+
+        function downloadImage() {
+            html2canvas(document.getElementById('canvas-inner')).then(function(canvas) {
+                const link = document.createElement('a');
+                link.download = 'meme.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
 
         document.getElementById('resize-slider').addEventListener('input', resizeDecoration);
         document.getElementById('x-slider').addEventListener('input', moveDecoration);
@@ -424,6 +389,17 @@
         document.getElementById('rotate-left').addEventListener('click', rotateLeft);
         document.getElementById('rotate-right').addEventListener('click', rotateRight);
         document.getElementById('flip-button').addEventListener('click', flipDecoration);
+        document.getElementById('delete-decoration').addEventListener('click', deleteLastDecoration);
+        document.getElementById('upload-input').addEventListener('change', handleImageUpload);
+        document.getElementById('add-text-button').addEventListener('click', handleTextAdd);
+        document.getElementById('download-image').addEventListener('click', downloadImage);
+
+        Array.from(document.getElementsByClassName('button')).forEach(button => {
+            const decorationUrl = button.dataset.url;
+            if (decorationUrl) {
+                button.addEventListener('click', () => addDecoration(decorationUrl));
+            }
+        });
     </script>
 </body>
 </html>
