@@ -216,6 +216,23 @@
         let selectedDecoration = null;
         let rotateValue = 0;
 
+        function handleDecorationTouchStart(event) {
+            event.preventDefault();
+            selectDecoration(event.target);
+        }
+
+        function handleDecorationTouchEnd(event) {
+            event.preventDefault();
+            if (event.changedTouches.length > 0) {
+                const rect = event.target.getBoundingClientRect();
+                const touch = event.changedTouches[0];
+                const touchX = touch.clientX - rect.left;
+                const touchY = touch.clientY - rect.top;
+                event.target.style.left = ((touchX / rect.width) * 100) + '%';
+                event.target.style.top = ((touchY / rect.height) * 100) + '%';
+            }
+        }
+
         function addDecoration(decorationUrl, isText = false, textContent = '') {
             let newDecoration;
 
@@ -238,7 +255,8 @@
             newDecoration.style.top = '50%';
             newDecoration.style.transform = 'translate(-50%, -50%) rotate(0deg)';
             newDecoration.addEventListener('mousedown', handleDecorationMouseDown);
-            newDecoration.addEventListener('touchstart', handleDecorationMouseDown);
+            newDecoration.addEventListener('touchstart', handleDecorationTouchStart);
+            newDecoration.addEventListener('touchend', handleDecorationTouchEnd);
             document.getElementById('decorations-container').appendChild(newDecoration);
             decorations.push(newDecoration);
             selectDecoration(newDecoration);
