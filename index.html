@@ -7,7 +7,6 @@
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Impact&display=swap');
 
-        /* Create animation for background color change */
         @keyframes backgroundChange {
             0% {background-color: #D1C4E9;}
             50% {background-color: #B39DDB;}
@@ -26,7 +25,6 @@
             justify-content: center;
             background: #F8F0FB;
             overflow: auto;
-            /* Add animation for background color change */
             animation: backgroundChange 5s infinite;
         }
 
@@ -238,7 +236,7 @@
             newDecoration.style.position = 'absolute';
             newDecoration.style.left = '50%';
             newDecoration.style.top = '50%';
-            newDecoration.style.transform = 'translate(-50%, -50%)';
+            newDecoration.style.transform = 'translate(-50%, -50%) rotate(0deg)';
             newDecoration.addEventListener('mousedown', handleDecorationMouseDown);
             newDecoration.addEventListener('touchstart', handleDecorationMouseDown);
             document.getElementById('decorations-container').appendChild(newDecoration);
@@ -350,8 +348,8 @@
             const canvas = await html2canvas(document.getElementById('canvas-inner'), {
                 useCORS: true,
                 scrollY: -window.scrollY,
-                windowWidth: document.body.scrollWidth,
-                windowHeight: document.body.scrollHeight,
+                windowWidth: document.getElementById('canvas-inner').scrollWidth,
+                windowHeight: document.getElementById('canvas-inner').scrollHeight,
             });
             const dataUrl = canvas.toDataURL('image/png');
             const link = document.createElement('a');
