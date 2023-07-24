@@ -62,22 +62,6 @@
             background-color: #B39DDB;
         }
 
-        .do-not-click {
-            display: inline-block;
-            padding: 8px 16px;
-            margin: 5px;
-            background-color: #ADD8E6;
-            color: #3F3D56;
-            border-radius: 30px;
-            text-decoration: none;
-            transition: background-color 0.3s ease-in-out;
-            cursor: pointer;
-        }
-
-        .do-not-click:hover {
-            background-color: #87CEEB;
-        }
-
         .decoration {
             position: absolute;
             opacity: 1;
@@ -99,6 +83,10 @@
             font-size: 50px;
             -webkit-text-stroke: 2px black;
             padding: 10px;
+            width: 100%;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            hyphens: auto;
         }
 
         .upload-label {
@@ -185,8 +173,7 @@
             <div class="button" data-url="https://i.imgur.com/LXvNxkt.png">Beers</div>
             <div class="button" data-url="https://i.imgur.com/HYlGsfO.png">Ciggy</div>
             <div class="button" data-url="https://i.imgur.com/DWzLF6b.png">Dem Eyes</div>
-            <div class="button" data-url="https://i.imgur.com/Wajtyfr.png">MilarFrame</div>
-            <a class="button do-not-click" href="https://twitter.com/kingarfeth" target="_blank">Do Not Click</a>
+            <div class="button" data-url="https://i.imgur.com/Wajtyfr.png">Milarf Frame</div>
         </div>
         <label for="upload-input" class="upload-label">
             <input type="file" id="upload-input" accept="image/*">
@@ -247,6 +234,7 @@
                 newDecoration.textContent = textContent;
                 newDecoration.classList.add('text-decoration');
                 newDecoration.style.fontSize = '50px';
+                newDecoration.style.width = document.getElementById('uploaded-image').offsetWidth + 'px';
             } else {
                 newDecoration = document.createElement('img');
                 newDecoration.src = decorationUrl;
@@ -394,10 +382,9 @@
         document.getElementById('add-text-button').addEventListener('click', handleTextAdd);
         document.getElementById('download-image').addEventListener('click', downloadImage);
 
-        Array.from(document.getElementsByClassName('button')).forEach(button => {
-            const decorationUrl = button.dataset.url;
-            if (decorationUrl) {
-                button.addEventListener('click', () => addDecoration(decorationUrl));
+        document.getElementById('decoration-buttons').addEventListener('click', function(event) {
+            if (event.target.classList.contains('button')) {
+                addDecoration(event.target.getAttribute('data-url'));
             }
         });
     </script>
