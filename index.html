@@ -171,9 +171,9 @@
         </div>
         <div id="decoration-buttons">
             <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/bl%20hands.png?token=GHSAT0AAAAAACFNMSWDUW5RMU2EUMAH7EUEZGA2LKQ">Beers</div>
-            <div class="button" data-url="https://i.imgur.com/HYlGsfO.png">Ciggy</div>
-            <div class="button" data-url="https://i.imgur.com/DWzLF6b.png">Dem Eyes</div>
-            <div class="button" data-url="https://i.imgur.com/Wajtyfr.png">Milarf Frame</div>
+            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/cig.png?token=GHSAT0AAAAAACFNMSWDMSLWSG4UCJIPOYBKZGA2NXQ">Ciggy</div>
+            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/eyes.png?token=GHSAT0AAAAAACFNMSWC3RXEMNWFIFXFBWOUZGA2OTA">Dem Eyes</div>
+            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/logo%20frame.png?token=GHSAT0AAAAAACFNMSWD4FI6KSSHWFVDWOKUZGA2O7Q">Milarf Frame</div>
         </div>
         <label for="upload-input" class="upload-label">
             <input type="file" id="upload-input" accept="image/*">
@@ -363,7 +363,7 @@
         }
 
         function downloadImage() {
-            html2canvas(document.getElementById('canvas-inner')).then(function(canvas) {
+            html2canvas(document.getElementById('canvas-inner'), {useCORS: true}).then(function(canvas) {
                 const link = document.createElement('a');
                 link.download = 'meme.png';
                 link.href = canvas.toDataURL('image/png');
