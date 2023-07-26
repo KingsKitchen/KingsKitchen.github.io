@@ -347,8 +347,13 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    document.getElementById('uploaded-image').src = e.target.result;
-                    decorations.forEach(decoration => deleteDecoration(decoration));
+                    const uploadedImage = document.getElementById('uploaded-image');
+                    uploadedImage.src = e.target.result;
+                    uploadedImage.onload = function() {
+                        const canvasInner = document.getElementById('canvas-inner');
+                        canvasInner.style.height = uploadedImage.offsetHeight + 'px';
+                        decorations.forEach(decoration => deleteDecoration(decoration));
+                    };
                 };
                 reader.readAsDataURL(file);
             }
@@ -363,7 +368,46 @@
         }
 
         function downloadImage() {
-            html2canvas(document.getElementById('canvas-inner'), {useCORS: true}).then(function(canvas) {
+            const canvasInner = document.getElementById('canvas-inner');
+            const originalWidth = document.getElementById('uploaded-image').naturalWidth;
+            const originalHeight = document.getElementById('uploaded-image').naturalHeight;
+            const scale = originalWidth / canvasInner.offsetWidth;
+
+            // Create a new div to hold the cloned image and decorations
+            const newDiv = document.createElement('div');
+            newDiv.style.position = 'relative';
+            document.body.appendChild(newDiv);
+
+            // Clone the image and decorations, append them to the new div
+            const clonedImage = document.getElementById('uploaded-image').cloneNode(true);
+            newDiv.appendChild(clonedImage);
+            const clonedDecorations = document.getElementById('decorations-container').cloneNode(true);
+            newDiv.appendChild(clonedDecorations);
+
+            // Update the sizes of the cloned image and decorations
+            clonedImage.style.width = originalWidth + 'px';
+            clonedDecorations.childNodes.forEach((decoration, index) => {
+                const originalDecoration = decorations[index];
+                if (originalDecoration.classList.contains('text-decoration')) {
+                    const originalFontSize = parseInt(window.getComputedStyle(originalDecoration).fontSize);
+                    const newFontSize = originalFontSize * scale;
+                    decoration.style.fontSize = newFontSize + 'px';
+                    decoration.style.width = originalWidth + 'px';
+                } else {
+                    const originalWidth = parseInt(originalDecoration.style.width);
+                    const newWidth = originalWidth * scale;
+                    decoration.style.width = newWidth + 'px';
+                    decoration.style.height = newWidth + 'px';
+                }
+                const originalLeft = parseInt(originalDecoration.style.left);
+                const originalTop = parseInt(originalDecoration.style.top);
+                decoration.style.left = originalLeft + '%';
+                decoration.style.top = originalTop + '%';
+            });
+
+            // Take a screenshot of the new div
+            html2canvas(newDiv, {useCORS: true}).then(function(canvas) {
+                document.body.removeChild(newDiv);
                 const link = document.createElement('a');
                 link.download = 'meme.png';
                 link.href = canvas.toDataURL('image/png');
