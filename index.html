@@ -173,6 +173,18 @@
             <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/cig.png?token=GHSAT0AAAAAACFNMSWDMSLWSG4UCJIPOYBKZGA2NXQ">Ciggy</div>
             <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/eyes.png?token=GHSAT0AAAAAACFNMSWC3RXEMNWFIFXFBWOUZGA2OTA">Dem Eyes</div>
             <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/logo%20frame.png?token=GHSAT0AAAAAACFNMSWD4FI6KSSHWFVDWOKUZGA2O7Q">Milarf Frame</div>
+            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/braids.png">Blue Hair</div>
+            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/flip%20hair.png">Purp Hair</div>
+            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/undercut.png">Short Hair</div>
+            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/snapface%203.png">Milarface</div>
+            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/snapface%202.png">Vamp Face</div>
+            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/snapface%201.png">Cig Face</div>
+            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/rainbow%20sport%2310.png">Rainbow Glasses</div>
+            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/carti%20glasses.png">Carti Glasses</div>
+            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/halo%20head.png">Halo Head</div>
+            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/bald%20head.png">Vamp Head</div>
+            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/face%20tats.png">Face Tats</div>
+            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/logo.png">Milarfy Logo</div>
         </div>
         <label for="upload-input" class="upload-label">
             <input type="file" id="upload-input" accept="image/*">
@@ -411,26 +423,29 @@
                 document.body.removeChild(newDiv);
                 const link = document.createElement('a');
                 link.download = 'meme.png';
-                link.href = canvas.toDataURL('image/png');
+                link.href = canvas.toDataURL();
                 link.click();
             });
         }
 
-        document.getElementById('resize-slider').addEventListener('input', resizeDecoration);
-        document.getElementById('x-slider').addEventListener('input', moveDecoration);
-        document.getElementById('y-slider').addEventListener('input', moveDecoration);
-        document.getElementById('rotate-left').addEventListener('click', rotateLeft);
-        document.getElementById('rotate-right').addEventListener('click', rotateRight);
-        document.getElementById('flip-button').addEventListener('click', flipDecoration);
-        document.getElementById('delete-decoration').addEventListener('click', deleteLastDecoration);
-        document.getElementById('upload-input').addEventListener('change', handleImageUpload);
-        document.getElementById('add-text-button').addEventListener('click', handleTextAdd);
-        document.getElementById('download-image').addEventListener('click', downloadImage);
-
-        document.getElementById('decoration-buttons').addEventListener('click', function(event) {
-            if (event.target.classList.contains('button')) {
-                addDecoration(event.target.getAttribute('data-url'));
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const decorationButtons = document.getElementsByClassName('button');
+            for (let i = 0; i < decorationButtons.length; i++) {
+                const button = decorationButtons[i];
+                button.addEventListener('click', function(event) {
+                    addDecoration(button.dataset.url);
+                });
             }
+            document.getElementById('delete-decoration').addEventListener('click', deleteLastDecoration);
+            document.getElementById('resize-slider').addEventListener('input', resizeDecoration);
+            document.getElementById('x-slider').addEventListener('input', moveDecoration);
+            document.getElementById('y-slider').addEventListener('input', moveDecoration);
+            document.getElementById('rotate-left').addEventListener('click', rotateLeft);
+            document.getElementById('rotate-right').addEventListener('click', rotateRight);
+            document.getElementById('flip-button').addEventListener('click', flipDecoration);
+            document.getElementById('upload-input').addEventListener('change', handleImageUpload);
+            document.getElementById('add-text-button').addEventListener('click', handleTextAdd);
+            document.getElementById('download-image').addEventListener('click', downloadImage);
         });
     </script>
 </body>
