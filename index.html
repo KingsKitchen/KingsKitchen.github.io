@@ -148,7 +148,6 @@
 
         #canvas-inner {
             width: 100%;
-            overflow-y: auto;
             padding: 0;
             background: transparent;
         }
@@ -376,6 +375,8 @@
             // Create a new div to hold the cloned image and decorations
             const newDiv = document.createElement('div');
             newDiv.style.position = 'relative';
+            newDiv.style.width = originalWidth + 'px';
+            newDiv.style.height = originalHeight + 'px';
             document.body.appendChild(newDiv);
 
             // Clone the image and decorations, append them to the new div
@@ -406,7 +407,7 @@
             });
 
             // Take a screenshot of the new div
-            html2canvas(newDiv, {useCORS: true}).then(function(canvas) {
+            html2canvas(newDiv, {useCORS: true, width: originalWidth, height: originalHeight}).then(function(canvas) {
                 document.body.removeChild(newDiv);
                 const link = document.createElement('a');
                 link.download = 'meme.png';
