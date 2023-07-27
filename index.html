@@ -238,6 +238,11 @@
         }
 
         function addDecoration(decorationUrl, isText = false, textContent = '') {
+            // If it's a decoration and the url is empty, don't do anything
+            if (!isText && decorationUrl.trim() === '') {
+                return;
+            }
+
             let newDecoration;
 
             if (isText) {
@@ -268,7 +273,8 @@
 
         function deleteLastDecoration() {
             if (decorations.length > 0) {
-                let lastDecoration = decorations.pop();
+                let lastDecoration = document.getElementById('decorations-container').lastChild;
+                decorations.pop();
                 lastDecoration.remove();
             }
         }
@@ -337,116 +343,68 @@
 
         function updateRotate() {
             if (selectedDecoration) {
-                const existingTransform = selectedDecoration.style.transform.replace(/rotate\(.*?\)/, '');
-                const newTransform = existingTransform + ` rotate(${rotateValue}deg)`;
-                selectedDecoration.style.transform = newTransform;
+                let flipString = '';
+                if (selectedDecoration.style.transform.includes('scaleX(-1)')) {
+                    flipString = 'scaleX(-1) ';
+                }
+                selectedDecoration.style.transform = flipString + 'translate(-50%, -50%) rotate(' + rotateValue + 'deg)';
             }
         }
 
-        function flipDecoration() {
+        function flipHorizontal() {
             if (selectedDecoration) {
-                const flipValue = selectedDecoration.style.transform.includes('scaleX(-1)') ? '' : 'scaleX(-1)';
-                const existingTransform = selectedDecoration.style.transform.replace(/scaleX\(-1\)/, '');
-                const newTransform = existingTransform + ` ${flipValue}`;
-                selectedDecoration.style.transform = newTransform;
-                updateSliders();
-            }
-        }
-
-        function handleImageUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const uploadedImage = document.getElementById('uploaded-image');
-                    uploadedImage.src = e.target.result;
-                    uploadedImage.onload = function() {
-                        const canvasInner = document.getElementById('canvas-inner');
-                        canvasInner.style.height = uploadedImage.offsetHeight + 'px';
-                        decorations.forEach(decoration => deleteDecoration(decoration));
-                    };
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function handleTextAdd() {
-            const textContent = document.getElementById('meme-text-input').value;
-            if (textContent.trim().length > 0) {
-                addDecoration('', true, textContent);
-                document.getElementById('meme-text-input').value = '';
+                let flipString = '';
+                if (!selectedDecoration.style.transform.includes('scaleX(-1)')) {
+                    flipString = 'scaleX(-1) ';
+                }
+                selectedDecoration.style.transform = flipString + 'translate(-50%, -50%) rotate(' + rotateValue + 'deg)';
+                document.getElementById('flip-button').textContent = flipString ? 'Unflip Horizontally' : 'Flip Horizontally';
             }
         }
 
         function downloadImage() {
-            const canvasInner = document.getElementById('canvas-inner');
-            const originalWidth = document.getElementById('uploaded-image').naturalWidth;
-            const originalHeight = document.getElementById('uploaded-image').naturalHeight;
-            const scale = originalWidth / canvasInner.offsetWidth;
-
-            // Create a new div to hold the cloned image and decorations
-            const newDiv = document.createElement('div');
-            newDiv.style.position = 'relative';
-            newDiv.style.width = originalWidth + 'px';
-            newDiv.style.height = originalHeight + 'px';
-            document.body.appendChild(newDiv);
-
-            // Clone the image and decorations, append them to the new div
-            const clonedImage = document.getElementById('uploaded-image').cloneNode(true);
-            newDiv.appendChild(clonedImage);
-            const clonedDecorations = document.getElementById('decorations-container').cloneNode(true);
-            newDiv.appendChild(clonedDecorations);
-
-            // Update the sizes of the cloned image and decorations
-            clonedImage.style.width = originalWidth + 'px';
-            clonedDecorations.childNodes.forEach((decoration, index) => {
-                const originalDecoration = decorations[index];
-                if (originalDecoration.classList.contains('text-decoration')) {
-                    const originalFontSize = parseInt(window.getComputedStyle(originalDecoration).fontSize);
-                    const newFontSize = originalFontSize * scale;
-                    decoration.style.fontSize = newFontSize + 'px';
-                    decoration.style.width = originalWidth + 'px';
-                } else {
-                    const originalWidth = parseInt(originalDecoration.style.width);
-                    const newWidth = originalWidth * scale;
-                    decoration.style.width = newWidth + 'px';
-                    decoration.style.height = newWidth + 'px';
-                }
-                const originalLeft = parseInt(originalDecoration.style.left);
-                const originalTop = parseInt(originalDecoration.style.top);
-                decoration.style.left = originalLeft + '%';
-                decoration.style.top = originalTop + '%';
-            });
-
-            // Take a screenshot of the new div
-            html2canvas(newDiv, {useCORS: true, width: originalWidth, height: originalHeight}).then(function(canvas) {
-                document.body.removeChild(newDiv);
-                const link = document.createElement('a');
-                link.download = 'meme.png';
-                link.href = canvas.toDataURL();
+            html2canvas(document.getElementById('canvas-inner')).then(function(canvas) {
+                let link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');
+                link.download = 'milarfme.png';
                 link.click();
             });
         }
 
-        window.addEventListener('DOMContentLoaded', (event) => {
-            const decorationButtons = document.getElementsByClassName('button');
-            for (let i = 0; i < decorationButtons.length; i++) {
-                const button = decorationButtons[i];
-                button.addEventListener('click', function(event) {
-                    addDecoration(button.dataset.url);
+        document.getElementById('upload-input').addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.addEventListener('load', function() {
+                    document.getElementById('uploaded-image').src = this.result;
                 });
+                reader.readAsDataURL(file);
             }
-            document.getElementById('delete-decoration').addEventListener('click', deleteLastDecoration);
-            document.getElementById('resize-slider').addEventListener('input', resizeDecoration);
-            document.getElementById('x-slider').addEventListener('input', moveDecoration);
-            document.getElementById('y-slider').addEventListener('input', moveDecoration);
-            document.getElementById('rotate-left').addEventListener('click', rotateLeft);
-            document.getElementById('rotate-right').addEventListener('click', rotateRight);
-            document.getElementById('flip-button').addEventListener('click', flipDecoration);
-            document.getElementById('upload-input').addEventListener('change', handleImageUpload);
-            document.getElementById('add-text-button').addEventListener('click', handleTextAdd);
-            document.getElementById('download-image').addEventListener('click', downloadImage);
+        });
+
+        document.getElementById('add-text-button').addEventListener('click', function() {
+            const memeTextInput = document.getElementById('meme-text-input');
+            if (memeTextInput.value.trim() !== '') {
+                addDecoration('', true, memeTextInput.value.trim());
+                memeTextInput.value = '';
+            }
+        });
+
+        document.getElementById('resize-slider').addEventListener('input', resizeDecoration);
+        document.getElementById('x-slider').addEventListener('input', moveDecoration);
+        document.getElementById('y-slider').addEventListener('input', moveDecoration);
+        document.getElementById('rotate-left').addEventListener('click', rotateLeft);
+        document.getElementById('rotate-right').addEventListener('click', rotateRight);
+        document.getElementById('flip-button').addEventListener('click', flipHorizontal);
+        document.getElementById('delete-decoration').addEventListener('click', deleteLastDecoration);
+        document.getElementById('download-image').addEventListener('click', downloadImage);
+
+        Array.from(document.getElementsByClassName('button')).forEach(function(button) {
+            button.addEventListener('click', function() {
+                addDecoration(this.dataset.url);
+            });
         });
     </script>
 </body>
 </html>
+
