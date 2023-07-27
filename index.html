@@ -238,7 +238,6 @@
         }
 
         function addDecoration(decorationUrl, isText = false, textContent = '') {
-            // If it's a decoration and the url is empty, don't do anything
             if (!isText && decorationUrl.trim() === '') {
                 return;
             }
@@ -253,6 +252,7 @@
                 newDecoration.style.width = document.getElementById('uploaded-image').offsetWidth + 'px';
             } else {
                 newDecoration = document.createElement('img');
+                newDecoration.crossOrigin = 'Anonymous';  // <----- Added this line
                 newDecoration.src = decorationUrl;
                 newDecoration.classList.add('decoration');
                 newDecoration.style.width = '300px';
@@ -363,7 +363,7 @@
         }
 
         function downloadImage() {
-            html2canvas(document.getElementById('canvas-inner')).then(function(canvas) {
+            html2canvas(document.getElementById('canvas-inner'), { useCORS: true }).then(function(canvas) {
                 let link = document.createElement('a');
                 link.href = canvas.toDataURL('image/png');
                 link.download = 'milarfme.png';
@@ -407,4 +407,3 @@
     </script>
 </body>
 </html>
-
