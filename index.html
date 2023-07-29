@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>MilarfME Maker</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meme Maker</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Impact&display=swap');
@@ -188,12 +187,12 @@
         </div>
         <label for="upload-input" class="upload-label">
             <input type="file" id="upload-input" accept="image/*">
-            Upload Mid Image
+            Upload Image
         </label>
         <input type="text" id="meme-text-input" placeholder="Enter your meme text here">
         <button class="button" id="add-text-button">Add Text</button>
         <div class="slider-container">
-            <span class="slider-label">Size: big or smol</span>
+            <span class="slider-label">Size:</span>
             <input type="range" min="50" max="800" value="300" step="10" id="resize-slider">
         </div>
         <div class="slider-container">
@@ -211,7 +210,7 @@
         </div>
         <button class="button" id="flip-button">Flip Horizontally</button>
         <button class="button" id="delete-decoration">Delete Last Decoration</button>
-        <button class="button" id="download-image">Download Banger</button>
+        <button class="button" id="download-image">Download Image</button>
     </div>
 
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
@@ -252,7 +251,6 @@
                 newDecoration.style.width = document.getElementById('uploaded-image').offsetWidth + 'px';
             } else {
                 newDecoration = document.createElement('img');
-                newDecoration.crossOrigin = 'Anonymous';  // <----- Added this line
                 newDecoration.src = decorationUrl;
                 newDecoration.classList.add('decoration');
                 newDecoration.style.width = '300px';
@@ -341,32 +339,22 @@
             }
         }
 
-        function updateRotate() {
+        function flipDecoration() {
             if (selectedDecoration) {
-                let flipString = '';
                 if (selectedDecoration.style.transform.includes('scaleX(-1)')) {
-                    flipString = 'scaleX(-1) ';
+                    selectedDecoration.style.transform = selectedDecoration.style.transform.replace('scaleX(-1) ', '');
+                } else {
+                    selectedDecoration.style.transform = 'scaleX(-1) ' + selectedDecoration.style.transform;
                 }
-                selectedDecoration.style.transform = flipString + 'translate(-50%, -50%) rotate(' + rotateValue + 'deg)';
-            }
-        }
-
-        function flipHorizontal() {
-            if (selectedDecoration) {
-                let flipString = '';
-                if (!selectedDecoration.style.transform.includes('scaleX(-1)')) {
-                    flipString = 'scaleX(-1) ';
-                }
-                selectedDecoration.style.transform = flipString + 'translate(-50%, -50%) rotate(' + rotateValue + 'deg)';
-                document.getElementById('flip-button').textContent = flipString ? 'Unflip Horizontally' : 'Flip Horizontally';
+                document.getElementById('flip-button').textContent = selectedDecoration.style.transform.includes('scaleX(-1)') ? 'Unflip Horizontally' : 'Flip Horizontally';
             }
         }
 
         function downloadImage() {
-            html2canvas(document.getElementById('canvas-inner'), { useCORS: true }).then(function(canvas) {
+            html2canvas(document.getElementById('canvas-inner'), { useCORS: true, backgroundColor: null }).then(function(canvas) {
                 let link = document.createElement('a');
                 link.href = canvas.toDataURL('image/png');
-                link.download = 'milarfme.png';
+                link.download = 'meme.png';
                 link.click();
             });
         }
@@ -395,7 +383,7 @@
         document.getElementById('y-slider').addEventListener('input', moveDecoration);
         document.getElementById('rotate-left').addEventListener('click', rotateLeft);
         document.getElementById('rotate-right').addEventListener('click', rotateRight);
-        document.getElementById('flip-button').addEventListener('click', flipHorizontal);
+        document.getElementById('flip-button').addEventListener('click', flipDecoration);
         document.getElementById('delete-decoration').addEventListener('click', deleteLastDecoration);
         document.getElementById('download-image').addEventListener('click', downloadImage);
 
