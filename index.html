@@ -154,6 +154,25 @@
         #download-image {
             margin-top: 10px;
         }
+
+        /* Additional Styles for Dropdown */
+        #decoration-dropdown {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 5px;
+            background-color: #D1C4E9;
+            color: #3F3D56;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: background-color 0.3s ease-in-out;
+            cursor: pointer;
+            outline: none;
+            border: none;
+        }
+
+        #decoration-dropdown:hover {
+            background-color: #B39DDB;
+        }
     </style>
 </head>
 <body>
@@ -167,24 +186,25 @@
                 </div>
             </div>
         </div>
-        <div id="decoration-buttons">
-            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/bl%20hands.png?token=GHSAT0AAAAAACFNMSWDUW5RMU2EUMAH7EUEZGA2LKQ">Beers</div>
-            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/cig.png?token=GHSAT0AAAAAACFNMSWDMSLWSG4UCJIPOYBKZGA2NXQ">Ciggy</div>
-            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/eyes.png?token=GHSAT0AAAAAACFNMSWC3RXEMNWFIFXFBWOUZGA2OTA">Dem Eyes</div>
-            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/logo%20frame.png?token=GHSAT0AAAAAACFNMSWD4FI6KSSHWFVDWOKUZGA2O7Q">Milarf Frame</div>
-            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/braids.png">Blue Hair</div>
-            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/flip%20hair.png">Purp Hair</div>
-            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/undercut.png">Short Hair</div>
-            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/snapface%203.png">Milarface</div>
-            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/bald%20head.png">Vamp Face</div>
-            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/snapface%201.png">Cig Face</div>
-            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/rainbow%20sport%2310.png">Rainbow Glasses</div>
-            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/carti%20glasses.png">Carti Glasses</div>
-            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/halo%20head.png">Halo Head</div>
-            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/bald%20head.png">Vamp Head</div>
-            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/face%20tats.png">Face Tats</div>
-            <div class="button" data-url="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/logo.png">Milarfy Logo</div>
-        </div>
+        <select id="decoration-dropdown">
+            <option value="">Choose Overlay</option>
+            <option value="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/bl%20hands.png?token=GHSAT0AAAAAACFNMSWDUW5RMU2EUMAH7EUEZGA2LKQ">Beers</option>
+            <option value="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/cig.png?token=GHSAT0AAAAAACFNMSWDMSLWSG4UCJIPOYBKZGA2NXQ">Ciggy</option>
+            <option value="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/eyes.png?token=GHSAT0AAAAAACFNMSWC3RXEMNWFIFXFBWOUZGA2OTA">Dem Eyes</option>
+            <option value="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/logo%20frame.png?token=GHSAT0AAAAAACFNMSWD4FI6KSSHWFVDWOKUZGA2O7Q">Milarf Frame</option>
+            <option value="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/braids.png">Blue Hair</option>
+            <option value="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/flip%20hair.png">Purp Hair</option>
+            <option value="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/undercut.png">Short Hair</option>
+            <option value="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/snapface%203.png">Milarface</option>
+            <option value="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/bald%20head.png">Vamp Face</option>
+            <option value="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/snapface%201.png">Cig Face</option>
+            <option value="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/rainbow%20sport%2310.png">Rainbow Glasses</option>
+            <option value="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/carti%20glasses.png">Carti Glasses</option>
+            <option value="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/halo%20head.png">Halo Head</option>
+            <option value="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/bald%20head.png">Vamp Head</option>
+            <option value="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/face%20tats.png">Face Tats</option>
+            <option value="https://raw.githubusercontent.com/KingsKitchen/mememakerimages/main/logo.png">Milarfy Logo</option>
+        </select>
         <label for="upload-input" class="upload-label">
             <input type="file" id="upload-input" accept="image/*">
             Upload Image
@@ -327,16 +347,21 @@
 
         function rotateLeft() {
             if (selectedDecoration) {
-                rotateValue = (rotateValue - 1) % 360;
+                rotateValue = (rotateValue - 5) % 360;
                 updateRotate();
             }
         }
 
         function rotateRight() {
             if (selectedDecoration) {
-                rotateValue = (rotateValue + 1) % 360;
+                rotateValue = (rotateValue + 5) % 360;
                 updateRotate();
             }
+        }
+
+        function updateRotate() {
+            const flipTransform = selectedDecoration.style.transform.includes('scaleX(-1)') ? 'scaleX(-1)' : '';
+            selectedDecoration.style.transform = `translate(-50%, -50%) rotate(${rotateValue}deg) ${flipTransform}`;
         }
 
         function flipDecoration() {
@@ -351,7 +376,8 @@
         }
 
         function downloadImage() {
-            html2canvas(document.getElementById('canvas-inner'), { useCORS: true, backgroundColor: null }).then(function(canvas) {
+            let scale = document.getElementById('uploaded-image').naturalWidth / document.getElementById('uploaded-image').offsetWidth;
+            html2canvas(document.getElementById('canvas-inner'), { useCORS: true, backgroundColor: null, scale: scale }).then(function(canvas) {
                 let link = document.createElement('a');
                 link.href = canvas.toDataURL('image/png');
                 link.download = 'meme.png';
@@ -386,11 +412,8 @@
         document.getElementById('flip-button').addEventListener('click', flipDecoration);
         document.getElementById('delete-decoration').addEventListener('click', deleteLastDecoration);
         document.getElementById('download-image').addEventListener('click', downloadImage);
-
-        Array.from(document.getElementsByClassName('button')).forEach(function(button) {
-            button.addEventListener('click', function() {
-                addDecoration(this.dataset.url);
-            });
+        document.getElementById('decoration-dropdown').addEventListener('change', function() {
+            addDecoration(this.value);
         });
     </script>
 </body>
